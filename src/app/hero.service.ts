@@ -70,20 +70,26 @@ export class HeroService {
   //////// Save methods //////////
 
   /** POST: add a new hero to the server */
-  addHero(hero: Hero): Observable<Hero> {
-    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
-      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
-      catchError(this.handleError<Hero>('addHero'))
+  addHero(hero: Hero): Observable<any> {
+    console.log("Some Hero",hero)
+    let url = this.heroesUrl + `/add/${hero.name}`
+    // this.heroesUrl = this.heroesUrl + `/${hero.name}`
+    return this.http.post(url, {hero : hero.name}, this.httpOptions).pipe(
+      tap((newHero) => this.log(`added hero with id=${newHero}`)),
+      catchError(this.handleError('addHero'))
     );
+    // return this.http.post<Hero>(url, {hero : hero.name}, this.httpOptions).pipe(
+    //   tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
+    //   catchError(this.handleError<Hero>('addHero'))
+    // );
   }
 
   /** DELETE: delete the hero from the server */
-  deleteHero(id: number): Observable<Hero> {
-    const url = `${this.heroesUrl}/${id}`;
-
-    return this.http.delete<Hero>(url, this.httpOptions).pipe(
+  deleteHero(id: number): Observable<any> {
+    let url = this.heroesUrl+`/delete/${id}`;
+    return this.http.post(url,{id:id}).pipe(
       tap(_ => this.log(`deleted hero id=${id}`)),
-      catchError(this.handleError<Hero>('deleteHero'))
+      catchError(this.handleError('deleteHero'))
     );
   }
 
@@ -106,7 +112,7 @@ export class HeroService {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+      // console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);

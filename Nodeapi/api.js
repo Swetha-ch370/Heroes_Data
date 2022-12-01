@@ -14,6 +14,7 @@ app.listen(3000, () => {
    });
    app.get("/details", (req, res, next) => {
     res.json([
+        { id:1000 ,name:"swetha"},
         { id: 12, name: 'Dr. Nice' },
         { id: 13, name: 'Bombasto' },
         { id: 14, name: 'Celeritas' },
