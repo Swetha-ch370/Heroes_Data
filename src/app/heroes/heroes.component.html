@@ -1,21 +1,41 @@
+<head>
+  link rel="stylesheet"
+  href=
+  "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <h2>My Heroes</h2>
 
 <div>
   <label for="new-hero">Hero name: </label>
   <input id="new-hero" #heroName />
-
-  <!-- (click) passes input value to add() and then clears the input -->
   <button type="button" class="add-button" (click)="add(heroName.value); heroName.value=''">
     Add hero
   </button>
 </div>
+<div *ngIf="showInputField">
+  <label for="update-hero">Hero name to update: </label>
+  <input id="update-hero" #heroName1 />
+  <button type="button" style="top:420px; left:350px" title="update hero"
+    (click)="update(updateHero,heroName1.value)">Submit</button>
 
+</div>
 <ul class="heroes">
   <li *ngFor="let hero of heroes">
     <a routerLink="/detail/{{hero.id}}">
       <span class="badge">{{hero.id}}</span> {{hero.name}}
     </a>
-    <button type="button" class="delete" title="delete hero"
-      (click)="delete(hero)">x</button>
+    <button type="button" class="delete" title="delete hero" (click)="delete(hero)">x</button>
+    <button type="button" class="update" title="update hero" (click)="showFields($event, hero)">
+      <!-- <mat-icon>
+        
+      </mat-icon> -->
+      <span class="edit-icon">&#9998;</span>
+      <style>
+        .edit-icon {
+          display: inline-block;
+          transform: rotateZ(90deg);
+        }
+      </style>
+    </button>
   </li>
 </ul>

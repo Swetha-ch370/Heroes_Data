@@ -61,8 +61,8 @@ export class HeroService {
     }
     return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
       tap(x => x.length ?
-         this.log(`found heroes matching "${term}"`) :
-         this.log(`no heroes matching "${term}"`)),
+        this.log(`found heroes matching "${term}"`) :
+        this.log(`no heroes matching "${term}"`)),
       catchError(this.handleError<Hero[]>('searchHeroes', []))
     );
   }
@@ -71,10 +71,9 @@ export class HeroService {
 
   /** POST: add a new hero to the server */
   addHero(hero: Hero): Observable<any> {
-    console.log("Some Hero",hero)
     let url = this.heroesUrl + `/add/${hero.name}`
     // this.heroesUrl = this.heroesUrl + `/${hero.name}`
-    return this.http.post(url, {hero : hero.name}, this.httpOptions).pipe(
+    return this.http.post(url, { hero: hero.name }, this.httpOptions).pipe(
       tap((newHero) => this.log(`added hero with id=${newHero}`)),
       catchError(this.handleError('addHero'))
     );
@@ -86,17 +85,18 @@ export class HeroService {
 
   /** DELETE: delete the hero from the server */
   deleteHero(id: number): Observable<any> {
-    let url = this.heroesUrl+`/delete/${id}`;
-    return this.http.post(url,{id:id}).pipe(
+    let url = this.heroesUrl + `/delete/${id}`;
+    return this.http.post(url, { id: id }).pipe(
       tap(_ => this.log(`deleted hero id=${id}`)),
       catchError(this.handleError('deleteHero'))
     );
   }
 
   /** PUT: update the hero on the server */
-  updateHero(hero: Hero): Observable<any> {
-    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
-      tap(_ => this.log(`updated hero id=${hero.id}`)),
+  updateHero(name: string, id: number): Observable<any> {
+    let url = this.heroesUrl + `/update/${id}`;
+    return this.http.post(url, { name: name, id: id }).pipe(
+      tap(_ => this.log(`updated hero id=${id}`)),
       catchError(this.handleError<any>('updateHero'))
     );
   }
@@ -111,9 +111,6 @@ export class HeroService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
-      // TODO: send the error to remote logging infrastructure
-      // console.error(error); // log to console instead
-
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
 
@@ -121,8 +118,6 @@ export class HeroService {
       return of(result as T);
     };
   }
-
-  /** Log a HeroService message with the MessageService */
   private log(message: string) {
     this.messageService.add(`HeroService: ${message}`);
   }

@@ -13,13 +13,16 @@ export class HeroesComponent implements OnInit {
 
   constructor(private heroService: HeroService) { }
 
+  showInputField = false;
+  updateHero: any;
+
   ngOnInit(): void {
     this.getHeroes();
   }
 
   getHeroes(): void {
     this.heroService.getHeroes()
-    .subscribe(heroes => this.heroes = heroes);
+      .subscribe(heroes => this.heroes = heroes);
   }
 
   add(name: string): void {
@@ -33,10 +36,23 @@ export class HeroesComponent implements OnInit {
         this.getHeroes();
       });
   }
-  
+
   delete(hero: Hero): void {
     this.heroes = this.heroes.filter(h => h !== hero);
     this.heroService.deleteHero(hero.id).subscribe();
+  }
+  update(hero: Hero, hname: string): void {
+    this.heroService.updateHero(hname, hero.id)
+      .subscribe(hero => {
+        console.log(this.heroes);
+        this.getHeroes();
+      });
+  }
+
+  showFields(event: any, hero: any) {
+    console.log("event", event);
+    this.updateHero = hero;
+    this.showInputField = true;
   }
 
 }
